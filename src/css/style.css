@@ -28,7 +28,7 @@ a {
   
   .split-image {
 	flex: 1;
-	background: url('../assets/images/book-cover.jpeg') center/cover no-repeat;
+	background: url('../images/book-cover.jpeg') center/cover no-repeat;
   }
   
   .split-content {
