@@ -1,9 +1,13 @@
+const { series, parallel} = require('gulp')
 const gulp = require('gulp')
 const concat = require('gulp-concat')
 const cssmin = require('gulp-cssmin')
 const rename = require('gulp-rename')
 const uglify = require('gulp-uglify')
 const image = require('gulp-imagemin')
+const babel = require('gulp-babel')
+const browserSync = require('browser-sync').create()
+const reload = browserSync.reload
 
 function tarefasCSS(cb) {
 
@@ -11,7 +15,7 @@ function tarefasCSS(cb) {
             './node_modules/bootstrap/dist/css/bootstrap.css',
             './vendor/owl/css/owl.css',
             './node_modules/@fortawesome/fontawesome-free/css/fontawesome.css',
-            './vendor/jquery-ui/jquery-ui.css',
+            // './vendor/jquery-ui/jquery-ui.css',
             './src/css/style.css'
         ])
         .pipe(concat('styles.css'))
@@ -21,7 +25,7 @@ function tarefasCSS(cb) {
 
 }
 
-function tarefasJS(){
+function tarefasJS(callback){
 
     return gulp.src([
             './node_modules/jquery/dist/jquery.js',
@@ -31,6 +35,10 @@ function tarefasJS(){
             './vendor/jquery-ui/jquery-ui.js',
             './src/js/custom.js'
         ])
+        .pipe(babel({
+            comments: false,
+            presets: ['@babel/env']
+        }))
         .pipe(concat('libs.js'))
         .pipe(uglify())
         .pipe(rename({ suffix: '.min'})) //libs.min.js
@@ -55,6 +63,34 @@ function tarefasImagem(){
         .pipe(gulp.dest('./dist/images'))
 }
 
+// POC - Proof of Concept
+function tarefasHTML(callback){
+
+    gulp.src('./src/**/*.html')
+        .pipe(htmlmin({ collapseWhitespace: true }))
+        .pipe(gulp.dest('./dist'))
+
+    return callback()
+
+}
+
+gulp.task('serve', function(){
+
+    browserSync.init({
+        server: {
+            baseDir: "./dist"
+        }
+    })
+    gulp.watch('./src/**/*').on('change', process) // repete o processo quando alterar algo em src
+    gulp.watch('./src/**/*').on('change', reload)
+
+})
+
+// series x parallel
+const process = series(tarefasHTML, tarefasCSS, tarefasJS)
+
 exports.styles = tarefasCSS
 exports.scripts = tarefasJS
 exports.images = tarefasImagem
+
+exports.default = process
