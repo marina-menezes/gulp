@@ -4,7 +4,10 @@ const concat = require('gulp-concat')
 const cssmin = require('gulp-cssmin')
 const rename = require('gulp-rename')
 const uglify = require('gulp-uglify')
-const image = require('gulp-imagemin')
+const image = require('gulp-image')
+const stripJs = require('gulp-strip-comments')
+const stripCss = require('gulp-strip-css-comments')
+const htmlmin = require('gulp-htmlmin')
 const babel = require('gulp-babel')
 const browserSync = require('browser-sync').create()
 const reload = browserSync.reload
@@ -86,8 +89,13 @@ gulp.task('serve', function(){
 
 })
 
+function end(cb){
+    console.log("tarefas concluídas")
+    return(cb)
+}
+
 // series x parallel
-const process = series(tarefasHTML, tarefasCSS, tarefasJS)
+const process = series(tarefasHTML, tarefasCSS, tarefasJS, end)
 
 exports.styles = tarefasCSS
 exports.scripts = tarefasJS
