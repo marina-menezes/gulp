@@ -4,7 +4,8 @@ const concat = require('gulp-concat')
 const cssmin = require('gulp-cssmin')
 const rename = require('gulp-rename')
 const uglify = require('gulp-uglify')
-const image = require('gulp-image')
+// const image = require('gulp-image')
+const image = require('gulp-imagemin')
 const stripJs = require('gulp-strip-comments')
 const stripCss = require('gulp-strip-css-comments')
 const htmlmin = require('gulp-htmlmin')
@@ -95,7 +96,7 @@ function end(cb){
 }
 
 // series x parallel
-const process = series(tarefasHTML, tarefasCSS, tarefasJS, end)
+const process = parallel(tarefasHTML, tarefasCSS, tarefasJS, end)
 
 exports.styles = tarefasCSS
 exports.scripts = tarefasJS
