@@ -13,6 +13,13 @@ const babel = require('gulp-babel')
 const browserSync = require('browser-sync').create()
 const reload = browserSync.reload
 
+function tarefasFont(cb) {
+    return gulp.src([
+        './src/css/font/Graphik.otf',
+    ])
+    .pipe(gulp.dest('./dist/css/font'))
+}
+
 function tarefasCSS(cb) {
 
     return gulp.src([
@@ -96,7 +103,7 @@ function end(cb){
 }
 
 // series x parallel
-const process = parallel(tarefasHTML, tarefasCSS, tarefasJS, end)
+const process = parallel(tarefasHTML, tarefasCSS, tarefasJS, tarefasFont, end)
 
 exports.styles = tarefasCSS
 exports.scripts = tarefasJS
